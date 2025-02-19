@@ -8,13 +8,13 @@ const shipCountInput = document.getElementById('ship-count');
 
 let BOARD_SIZE = 5;
 let SHIP_COUNT = 3;
-let COMPUTER_ATTACK_DELAY = 200;
+let COMPUTER_ATTACK_DELAY = 500;
 let playerShips = [], computerShips = [];
 let playerHits = 0, computerHits = 0;
 let playerCells = [];
 let gameActive = false;
+let playerTurn = true;
 
-// Update startButton event listener:
 startButton.addEventListener('click', () => {
   if (gameActive) {
     if (confirm("🔄 Are you sure you want to reset the current game?")) {
@@ -32,15 +32,6 @@ startButton.addEventListener('click', () => {
   }
 });
 
-
-// restartButton.addEventListener('click', () => {
-//   if (gameActive && confirm("Are you sure you want to restart the game?")) {
-//     playSound('start');
-//     startGame();
-//   }
-// });
-
-// Update startGame function:
 function startGame() {
   gameActive = true;
   playerHits = 0;
@@ -114,8 +105,9 @@ function placeShips(board, isEnemy) {
 }
 
 function handlePlayerAttack(cell, index) {
-  if (!gameActive) return; // Prevent moves after game ends
+  if (!gameActive || !playerTurn) return; // Prevent clicks if it's not the player's turn
 
+  playerTurn = false; // Disable player clicks until computer attacks
   if (computerShips.includes(index)) {
     cell.classList.add('hit');
     playerHits++;
@@ -127,8 +119,11 @@ function handlePlayerAttack(cell, index) {
     statusText.textContent = "💦 Miss! Enemy's turn...";
   }
 
-  if (playerHits === SHIP_COUNT) return endGame(true);
-  setTimeout(computerAttack, COMPUTER_ATTACK_DELAY);
+  if (playerHits === SHIP_COUNT) {
+    endGame(true);
+  } else {
+    setTimeout(computerAttack, COMPUTER_ATTACK_DELAY); // Computer attacks after delay
+  }
 }
 
 function computerAttack() {
@@ -150,7 +145,11 @@ function computerAttack() {
     statusText.textContent = "😅 Enemy missed! Your turn.";
   }
 
-  if (computerHits === SHIP_COUNT) endGame(false);
+  if (computerHits === SHIP_COUNT) {
+    endGame(false);
+  } else {
+    playerTurn = true; // Enable player clicks after computer's turn
+  }
 }
 
 function endGame(playerWon) {
