@@ -14,31 +14,41 @@ let playerHits = 0, computerHits = 0;
 let playerCells = [];
 let gameActive = false;
 
+// Update startButton event listener:
 startButton.addEventListener('click', () => {
-  BOARD_SIZE = parseInt(boardSizeInput.value);
-  SHIP_COUNT = Math.min(parseInt(shipCountInput.value), Math.floor(BOARD_SIZE * BOARD_SIZE / 3));
-  boardSizeInput.value = BOARD_SIZE;
-  shipCountInput.value = SHIP_COUNT;
+  if (gameActive) {
+    if (confirm("🔄 Are you sure you want to reset the current game?")) {
+      playSound('start');
+      startGame(); // Reset game mid-play
+    }
+  } else {
+    BOARD_SIZE = parseInt(boardSizeInput.value);
+    SHIP_COUNT = Math.min(parseInt(shipCountInput.value), Math.floor(BOARD_SIZE * BOARD_SIZE / 3));
+    boardSizeInput.value = BOARD_SIZE;
+    shipCountInput.value = SHIP_COUNT;
 
-  playSound('start');
-  startGame();
-});
-
-restartButton.addEventListener('click', () => {
-  if (gameActive && confirm("Are you sure you want to restart the game?")) {
     playSound('start');
-    startGame();
+    startGame(); // Start new game
   }
 });
 
+
+// restartButton.addEventListener('click', () => {
+//   if (gameActive && confirm("Are you sure you want to restart the game?")) {
+//     playSound('start');
+//     startGame();
+//   }
+// });
+
+// Update startGame function:
 function startGame() {
   gameActive = true;
   playerHits = 0;
   computerHits = 0;
   playerCells = [];
 
-  startButton.style.display = 'none';
-  restartButton.style.display = 'inline-block';
+  startButton.style.display = 'inline-block';
+  startButton.textContent = 'Reset Game'; // Change button text during active game
   statusText.textContent = "🚢 Battle begins! Attack the enemy ships!";
 
   createBoard(playerBoard, false);
@@ -49,9 +59,25 @@ function startGame() {
 }
 
 function createBoard(board, isEnemy) {
-  board.innerHTML = '';
-  board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 40px)`;
+  board.innerHTML = ''; // Clear the existing board
 
+  // Function to calculate and set responsive cell size
+  const calculateCellSize = () => {
+    const screenWidth = window.innerWidth;
+    let cellSize = 40; // Default for desktop
+
+    if (screenWidth <= 768) cellSize = 32; // Tablet
+    if (screenWidth <= 480) cellSize = 26; // Mobile
+
+    return cellSize;
+  };
+
+  // Set the initial cell size and grid columns
+  const cellSize = calculateCellSize();
+  board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, ${cellSize}px)`;
+  board.style.setProperty('--cell-size', `${cellSize}px`);
+
+  // Create the cells
   for (let i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
     const cell = document.createElement('div');
     cell.classList.add('cell');
@@ -65,8 +91,14 @@ function createBoard(board, isEnemy) {
 
     board.appendChild(cell);
   }
-}
 
+  // Update the board when window is resized
+  window.addEventListener('resize', () => {
+    const newCellSize = calculateCellSize();
+    board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, ${newCellSize}px)`;
+    board.style.setProperty('--cell-size', `${newCellSize}px`);
+  });
+}
 function placeShips(board, isEnemy) {
   const positions = [];
   while (positions.length < SHIP_COUNT) {

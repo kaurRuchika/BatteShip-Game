@@ -1,22 +1,44 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+
+}
+
+body, html {
+  overflow: hidden;  /* Prevent both horizontal and vertical scrolling */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%; /* Ensure full viewport height */
+}
+
 body {
   background-color: #282c34;
   color: #fff;
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
-  padding: 20px;
-  margin: 0;
+  padding: 0;  /* Remove padding to prevent extra space */
+  margin: 0;   /* Ensure no margin */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensure full viewport height */
+  overflow: hidden; /* Prevent both horizontal and vertical scroll */
 }
 
 .settings {
   margin-bottom: 15px;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
   gap: 10px;
+  width: 100%; /* Prevent overflow */
 }
 
 .settings label {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .settings input {
@@ -28,7 +50,7 @@ body {
 .settings button {
   margin: 0 5px;
   padding: 8px 16px;
-  font-size: 16px;
+  font-size: 18px;
   background-color: #4caf50;
   color: #fff;
   border: none;
@@ -39,7 +61,6 @@ body {
 
 .settings button:hover {
   background-color: #2196f3;
-  transform: scale(1.05); /* Slight zoom effect */
 }
 
 .game-container {
@@ -48,21 +69,22 @@ body {
   align-items: flex-start;
   gap: 40px;
   margin-top: 20px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Ensure boards wrap on smaller screens */
+  width: 100%; /* Prevent overflow */
+  overflow: hidden;  /* Ensure no horizontal scrolling */
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-auto-rows: 1fr; /* Ensure consistent row heights */
-  gap: 4px; /* Equal gap between rows and columns */
+  grid-template-columns: repeat(10, var(--cell-size, 40px));
+  gap: 4px;
   justify-content: center;
   width: max-content;
 }
 
 .cell {
-  width: 40px;
-  height: 40px;
+  width: var(--cell-size, 40px);
+  height: var(--cell-size, 40px);
   background-color: #61dafb;
   border-radius: 6px;
   cursor: pointer;
@@ -96,22 +118,25 @@ body {
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .settings label {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .settings button {
-    font-size: 14px;
+    font-size: 16px;
     padding: 6px 12px;
   }
 
+  .settings input {
+    width: 45px;
+  }
+
   .cell {
-    width: 32px;
-    height: 32px;
+    --cell-size: 32px;
   }
 
   .board {
-    gap: 3px; /* Maintain proportional gaps */
-    grid-auto-rows: 1fr; /* Keep row heights equal */
+    gap: 3px;
+    width: 100%;
   }
 
   #status {
@@ -125,18 +150,19 @@ body {
 
 @media (max-width: 480px) {
   body {
-    padding: 10px;
+    padding: 0;  /* Remove padding */
   }
 
   .settings {
     flex-direction: column;
     align-items: center;
+    width: 100%; /* Prevent overflow */
   }
 
   .settings label,
   .settings button {
     width: 100%;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .settings input {
@@ -147,19 +173,36 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    width: 100%; /* Prevent overflow */
   }
 
   .board {
-    gap: 2px; /* Reduce gap for smaller screens */
-    grid-auto-rows: 1fr; /* Keep rows consistent */
+    gap: 2px;
+    width: 100%;
   }
 
   .cell {
-    width: 26px;
-    height: 26px;
+    --cell-size: 26px;
   }
 
   #status {
     font-size: 14px;
   }
+
+  .player-main, .enemy-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+
+.container {
+  padding: 0 20px;
+  margin: 0 15px;
+  width: 100%;
+}
+h1{
+    margin: 10px 0
 }
