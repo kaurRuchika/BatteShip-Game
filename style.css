@@ -1,80 +1,165 @@
 body {
-    background-color: #282c34;
-    color: #fff;
-    font-family: 'Segoe UI', sans-serif;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .settings {
-    margin-bottom: 15px;
-  }
-  
+  background-color: #282c34;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+
+.settings {
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.settings label {
+  font-size: 16px;
+}
+
+.settings input {
+  width: 50px;
+  margin-left: 5px;
+  text-align: center;
+}
+
+.settings button {
+  margin: 0 5px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.settings button:hover {
+  background-color: #2196f3;
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-auto-rows: 1fr; /* Ensure consistent row heights */
+  gap: 4px; /* Equal gap between rows and columns */
+  justify-content: center;
+  width: max-content;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  background-color: #61dafb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cell.hit {
+  background-color: #ff6f61;
+}
+
+.cell.miss {
+  background-color: #8e8e8e;
+}
+
+.cell.no-hover {
+  pointer-events: none;
+  cursor: default;
+}
+
+.ship-reveal {
+  background-color: #4caf50;
+  border: 1px dashed #fff;
+}
+
+#status {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
   .settings label {
-    margin: 0 10px;
-    font-size: 16px;
+    font-size: 14px;
   }
-  
-  .settings input {
-    width: 50px;
-    margin-left: 5px;
-    text-align: center; 
-  }
-  
 
   .settings button {
-    margin: 0 5px;
-    padding: 8px 16px;
-    font-size: 16px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 14px;
+    padding: 6px 12px;
   }
-  
-  .settings button:hover {
-    background-color: #2196f3; 
-    transform: scale(1.05); /* Slight zoom effect */
-  }
-  .game-container {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 20px;
-  }
-  
-  .board {
-    display: grid;
-    gap: 4px;
-  }
-  
+
   .cell {
-    width: 40px;
-    height: 40px;
-    background-color: #61dafb;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    width: 32px;
+    height: 32px;
   }
-  
-  .cell.hit { background-color: #ff6f61; }
-  .cell.miss { background-color: #8e8e8e; }
-  
-  .cell.no-hover {
-    pointer-events: none;
-    cursor: default;
+
+  .board {
+    gap: 3px; /* Maintain proportional gaps */
+    grid-auto-rows: 1fr; /* Keep row heights equal */
   }
-  
-  .ship-reveal {
-    background-color: #4caf50; 
-    border: 1px dashed #fff;
-  }
-  
+
   #status {
-    margin-top: 15px;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
   }
-  
+
+  .game-container {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .settings {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .settings label,
+  .settings button {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .settings input {
+    width: 40px;
+  }
+
+  .game-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .board {
+    gap: 2px; /* Reduce gap for smaller screens */
+    grid-auto-rows: 1fr; /* Keep rows consistent */
+  }
+
+  .cell {
+    width: 26px;
+    height: 26px;
+  }
+
+  #status {
+    font-size: 14px;
+  }
+}
