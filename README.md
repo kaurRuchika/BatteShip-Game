@@ -26,18 +26,18 @@ Search for "battleship" on GitHub and you’ll find this fun and interactive pro
 ### 🖥️ **Run Locally**
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/battleship-game.git
+   git clone git@github.com:kaurRuchika/BatteShip-Game.git
    ```
 2. **Navigate into the project directory:**
    ```bash
-   cd battleship-game
+   cd BatteShip-Game
    ```
 3. **Open `index.html` in your browser:**
    You can double-click the file or use a live server extension in your code editor.
 
 ### 🌍 **Play Online**
 No installation required! Play instantly:  
-👉 [Battleship Game Live Demo](https://yourusername.github.io/battleship-game/)
+👉 [Battleship Game Live Demo](https://kaurruchika.github.io/BatteShip-Game/)
 
 ---
 
