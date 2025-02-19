@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🔥 Battleship 🚢</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>🔥 Battleship 🚢</h1>
+
+  <div class="settings">
+    <label>Board Size:
+      <input type="number" id="board-size" min="5" max="10" value="5" />
+    </label>
+    <label>Ship Count:
+      <input type="number" id="ship-count" min="1" value="3" />
+    </label>
+    <button id="start-button">🚀 Start Game</button>
+    <button id="restart-button" style="display: none;">🔄 Restart Game</button>
+  </div>
+
+  <div class="game-container">
+    <div>
+      <h2>Your Board</h2>
+      <div id="player-board" class="board player-board"></div>
+    </div>
+    <div>
+      <h2>Enemy Board</h2>
+      <div id="computer-board" class="board computer-board"></div>
+    </div>
+  </div>
+
+  <p id="status">💥 Choose settings and press "Start" to play! 🎯</p>
+
+  <script src="scripts/sound.js"></script>
+  <script src="scripts/game.js"></script>
+</body>
+</html>
