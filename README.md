@@ -1,7 +1,7 @@
 # Battleship Game
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)  
-🎮 **Play the live version:** [Battleship Game Demo](https://kaurRuchika.github.io/BattleShip-Game/)
+🎮 **Play the live version:** [Battleship Game Demo](https://kaurruchika.github.io/BatteShip-Game/)
 
 ---
 
