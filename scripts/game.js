@@ -5,6 +5,9 @@ const startButton = document.getElementById('start-button');
 const restartButton = document.getElementById('restart-button');
 const boardSizeInput = document.getElementById('board-size');
 const shipCountInput = document.getElementById('ship-count');
+const settingsToggle = document.getElementById('settings-toggle');
+const settingsPanel = document.getElementById('settings-panel');
+const saveSettingsButton = document.getElementById('save-settings');
 
 let BOARD_SIZE = 5;
 let SHIP_COUNT = 3;
@@ -15,6 +18,22 @@ let playerCells = [];
 let gameActive = false;
 let playerTurn = true;
 
+settingsToggle.addEventListener('click', () => {
+  settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+});
+
+saveSettingsButton.addEventListener('click', () => {
+  BOARD_SIZE = parseInt(boardSizeInput.value);
+  SHIP_COUNT = Math.min(parseInt(shipCountInput.value), Math.floor(BOARD_SIZE * BOARD_SIZE / 3));
+
+  boardSizeInput.value = BOARD_SIZE;
+  shipCountInput.value = SHIP_COUNT;
+
+  playSound('start');
+  startGame(); // Start or restart game with new settings
+
+  settingsPanel.style.display = 'none'; // Hide settings after saving
+});
 startButton.addEventListener('click', () => {
   if (gameActive) {
     if (confirm("🔄 Are you sure you want to reset the current game?")) {
@@ -22,6 +41,7 @@ startButton.addEventListener('click', () => {
       startGame(); // Reset game mid-play
     }
   } else {
+    settingsPanel.style.display = 'none'
     BOARD_SIZE = parseInt(boardSizeInput.value);
     SHIP_COUNT = Math.min(parseInt(shipCountInput.value), Math.floor(BOARD_SIZE * BOARD_SIZE / 3));
     boardSizeInput.value = BOARD_SIZE;
@@ -33,63 +53,72 @@ startButton.addEventListener('click', () => {
 });
 
 function startGame() {
-  gameActive = true;
-  playerHits = 0;
-  computerHits = 0;
-  playerCells = [];
+  resetGame();
 
-  startButton.style.display = 'inline-block';
-  startButton.textContent = 'Reset Game'; // Change button text during active game
+  gameActive = true;
+  playerTurn = true;
+  startButton.textContent = 'Reset Game';
   statusText.textContent = "🚢 Battle begins! Attack the enemy ships!";
 
-  createBoard(playerBoard, false);
-  createBoard(computerBoard, true);
+  createBoard(playerBoard, false); // Player board (no clicks)
+  createBoard(computerBoard, true); // Computer board (clickable cells)
 
   playerShips = placeShips(playerBoard, false);
   computerShips = placeShips(computerBoard, true);
 }
 
+function resetGame() {
+  playerHits = 0;
+  computerHits = 0;
+  playerCells = [];
+  playerShips = [];
+  computerShips = [];
+
+  // Clear boards
+  playerBoard.innerHTML = '';
+  computerBoard.innerHTML = '';
+
+  // Reset status and turn
+  playerTurn = true;
+  gameActive = false;
+}
+
 function createBoard(board, isEnemy) {
   board.innerHTML = ''; // Clear the existing board
 
-  // Function to calculate and set responsive cell size
   const calculateCellSize = () => {
     const screenWidth = window.innerWidth;
-    let cellSize = 40; // Default for desktop
-
-    if (screenWidth <= 768) cellSize = 32; // Tablet
-    if (screenWidth <= 480) cellSize = 26; // Mobile
-
+    let cellSize = 40;
+    if (screenWidth <= 768) cellSize = 32;
+    if (screenWidth <= 480) cellSize = 26;
     return cellSize;
   };
 
-  // Set the initial cell size and grid columns
   const cellSize = calculateCellSize();
   board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, ${cellSize}px)`;
   board.style.setProperty('--cell-size', `${cellSize}px`);
 
-  // Create the cells
   for (let i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
     const cell = document.createElement('div');
     cell.classList.add('cell');
 
     if (isEnemy) {
-      cell.addEventListener('click', () => handlePlayerAttack(cell, i), { once: true });
+      cell.addEventListener('click', () => handlePlayerAttack(cell, i));
     } else {
       playerCells.push(cell);
-      cell.classList.add('no-hover'); // Prevent hover effect on player board
+      cell.classList.add('no-hover');
     }
 
     board.appendChild(cell);
   }
 
-  // Update the board when window is resized
   window.addEventListener('resize', () => {
     const newCellSize = calculateCellSize();
     board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, ${newCellSize}px)`;
     board.style.setProperty('--cell-size', `${newCellSize}px`);
   });
 }
+
 function placeShips(board, isEnemy) {
   const positions = [];
   while (positions.length < SHIP_COUNT) {
@@ -103,11 +132,11 @@ function placeShips(board, isEnemy) {
   }
   return positions;
 }
-
 function handlePlayerAttack(cell, index) {
-  if (!gameActive || !playerTurn) return; // Prevent clicks if it's not the player's turn
+  if (!gameActive || !playerTurn || cell.classList.contains('hit') || cell.classList.contains('miss')) return;
 
-  playerTurn = false; // Disable player clicks until computer attacks
+  playerTurn = false;
+
   if (computerShips.includes(index)) {
     cell.classList.add('hit');
     playerHits++;
@@ -122,9 +151,10 @@ function handlePlayerAttack(cell, index) {
   if (playerHits === SHIP_COUNT) {
     endGame(true);
   } else {
-    setTimeout(computerAttack, COMPUTER_ATTACK_DELAY); // Computer attacks after delay
+    setTimeout(computerAttack, COMPUTER_ATTACK_DELAY);
   }
 }
+
 
 function computerAttack() {
   if (!gameActive) return;
@@ -155,13 +185,10 @@ function computerAttack() {
 function endGame(playerWon) {
   gameActive = false;
 
-  restartButton.style.display = 'none';
-  startButton.style.display = 'inline-block';
-
-  // Reveal ships on both boards
-  playerShips.forEach(pos => playerBoard.children[pos].classList.add('ship-reveal'));
-  computerShips.forEach(pos => computerBoard.children[pos].classList.add('ship-reveal'));
-
+  startButton.textContent = 'Start Game';
   statusText.textContent = playerWon ? "🏆 You won!" : "💥 You lost!";
   playSound(playerWon ? 'win' : 'lose');
+
+  playerShips.forEach(pos => playerBoard.children[pos].classList.add('ship-reveal'));
+  computerShips.forEach(pos => computerBoard.children[pos].classList.add('ship-reveal'));
 }

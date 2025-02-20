@@ -9,14 +9,24 @@
 <body>
   <div class="container">
     <h1>🔥 Battleship 🚢</h1>
+    <button id="settings-toggle">⚙️ Change Settings</button>
 
-    <div class="settings">
+    <div class="settings" id="settings-panel" style="display: none;">
       <label>Board Size:
         <input type="number" id="board-size" min="5" max="10" value="5" />
       </label>
       <label>Ship Count:
         <input type="number" id="ship-count" min="1" value="3" />
       </label>
+      <button id="save-settings">💾 Save & Start Game</button>
+    </div>
+    <div class="game-play-button">
+      <!-- <label>Board Size:
+        <input type="number" id="board-size" min="5" max="10" value="5" />
+      </label>
+      <label>Ship Count:
+        <input type="number" id="ship-count" min="1" value="3" />
+      </label> -->
       <button id="start-button">🚀 Start Game</button>
       <button id="restart-button" style="display: none;">🔄 Restart Game</button>
     </div>
